@@ -20,7 +20,10 @@ const Feed = ({article,page_number,totalResults}) => {
     const getMoreArticles = async() => {
       var cPage: number = currentPage + 1;
       setCurrentPage(cPage);
+<<<<<<< HEAD
+=======
      
+>>>>>>> b6adefa353e8a3d7d60a82e65c2de64b7d39b0d9
       
       const apiJson = await fetchData(currentPage);
       console.log("res ..", apiJson);
@@ -57,15 +60,7 @@ const Feed = ({article,page_number,totalResults}) => {
             </InfiniteScroll>
             {hasMore ? "" : <div className="text-center">no data anymore ...</div> }
             </>
-             {/* <div className="flex justify-center">
-                 <div onClick={()=>{if(page_number>1){router.push(`/feed/${page_number-1}`).then(()=>window.scrollTo(0,0))}}} className={`${page_number===1? "opacity-50 px-2 cursor-pointer" : "block px-2 cursor-pointer"}`}>
-                Previous Page
-                 </div>
-                 <div className="px-3">{page_number}</div>
-                 <div onClick={()=>{if(page_number<5){router.push(`/feed/${page_number+1}`).then(()=>window.scrollTo(0,0))}}} className={`${page_number===5? "opacity-50 px-2 cursor-pointer" : "block px-2 cursor-pointer"}`}>
-                 Next Page
-                 </div>
-            </div> */}
+           
 
 
         </div>
@@ -88,19 +83,8 @@ const fetchData=async (page_number)=>{
   
 }
 
-// for more clarification about hide and visibility of div got https://github.com/tailwindlabs/tailwindcss/discussions/1507
-export const getServerSideProps=async pageContext=>{
-    // const page_number=pageContext.query.page_id  //as the file name page_id
-
-    // if (!page_number || page_number<1 || page_number>5){
-    //     return{
-    //         props:{
-    //             article:[],
-    //             page_number:1
-    //         }
-    //     }
-    // }
-    
+export const getServerSideProps=async ()=>{
+   
     const page_number = 1;
 
 
