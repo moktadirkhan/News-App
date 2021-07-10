@@ -2,7 +2,7 @@ import { Router } from 'next/dist/client/router';
 import image from 'next/image';
 import React,{useState,useEffect} from 'react'
 import axios from 'axios';
-import InfiniteScroll  from 'react-infinite-scroller'
+import InfiniteScroll from "react-infinite-scroll-component";
 import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/dist/client/router';
 import Toolbar from '../../components/toolbar';
@@ -10,51 +10,36 @@ import Image from 'next/image'
 import fetch from 'node-fetch'
 // import UserService from 'services/UserService';
 
-const Feed = ({page_number,article}) => {
+const Feed = ({article,page_number,totalResults}) => {
     const router=useRouter()
     // console.log(article,page_number);
     const [articles, setarticles] = useState(article);
     const [currentPage, setCurrentPage] = useState(2);
     const [hasMore, setHasMore] = useState(true);
    
-    const getMoreArticles = () => {
+    const getMoreArticles = async() => {
+      var cPage: number = currentPage + 1;
+      setCurrentPage(cPage);
+      const size = 5 * page_number;
       
-     fetchData(currentPage).then((res) => {
-      // console.log('res......',res.apiResponse);
-         const newArticles =articles.concat(res.apiResponse);
-         setarticles(newArticles);
-        
-         const newPage=currentPage+1
-         setCurrentPage(newPage)
-    
-         if (res.length===0){
-           setHasMore(false)
-
-         }
-         else{
-           setHasMore(true)
-         }
-         }).catch((err) => {
-          console.log(err);
-        })
-       
-   
+      const apiJson = await fetchData(currentPage);
+      console.log("res ..", apiJson);
+      const { apiResponse } = apiJson;
+  
+      const { article } = await apiResponse;
+      setarticles((articles) => [...articles, ...article]);
 
     }
-    // useEffect(() => {
-    //   setHasMore(totalResults > articles.length ? true : false);
-    // }, [articles]);
-
-    //now for printing
+    useEffect(() => {
+      setHasMore(totalResults > articles.length ? true : false);
+    }, [articles]);
     return (
         <div >
           <Toolbar/>
             <>
             <InfiniteScroll 
-                    threshold={0}
-                    pageStart={0}
-                    // dataLength={articles.length}                    
-                    loadMore={getMoreArticles}
+                    dataLength={articles.length}                    
+                    next={getMoreArticles}
                     hasMore={hasMore}
                     loader={<div className="text-center" key={0}>loading data ...</div>}>
                       
@@ -117,32 +102,24 @@ export const getServerSideProps=async pageContext=>{
     // }
     
     const page_number = 1;
-  //   const apiResponse= await fetch(
-  //    `https://newsapi.org/v2/top-headlines?country=us&pageSize=5&page=${page_number}`,
-  //   // `https://newsapi.org/v2/top-headlines?country=us&pageSize=5&limit=${page_number}`,
-  //   // `https://newsapi.org/v2/top-headlines?country=us&_start=${page_number}&pageSize=5`,
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${process.env.NEXT_PUBLIC_NEWS_KEY}`,
-  //     },
-  //   },
-  // ).then(res => res.json());
+
 
     const apiJson = await fetchData(page_number);
   
     const apiResponse=await apiJson
     
     // console.log(apiResponse);
-      const  {articles}  = apiResponse;
-      // const {totalResults}  = apiResponse;
-   
+    const  {articles}  = apiResponse;
+    // const {totalResults}  = apiResponse;
+    const { totalResults } = apiResponse;
+
       
 
       return {
         props: {
           article: articles,
           page_number:page_number,
-         
+         totalResults,
         },
       };
 }

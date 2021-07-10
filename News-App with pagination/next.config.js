@@ -1,0 +1,22 @@
+module.exports = {
+  reactStrictMode: true,
+  images: {
+    domains: ['cdn.cnn.com',
+              'storage.googleapis.com',
+              'sportshub.cbsistatic.com',
+              'ichef.bbci.co.uk',
+              'static-17.sinclairstoryline.com',
+              'images.macrumors.com',
+              'static.foxnews.com',
+              'scx2.b-cdn.net',
+              'profootballtalk.nbcsports.com',
+              'nypost.com',
+              'www.reuters.com',
+              'media-cldnry.s-nbcnews.com',
+              'www.washingtonpost.com',
+              'image.cnbcfm.com',
+            'www.cnet.com',
+          'mediaproxy.salon.com',
+        'kubrick.htvapps.com'],
+  },
+}
