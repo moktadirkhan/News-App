@@ -20,7 +20,7 @@ const Feed = ({article,page_number,totalResults}) => {
     const getMoreArticles = async() => {
       var cPage: number = currentPage + 1;
       setCurrentPage(cPage);
-      const size = 5 * page_number;
+     
       
       const apiJson = await fetchData(currentPage);
       console.log("res ..", apiJson);
