@@ -8,50 +8,58 @@ import { useRouter } from 'next/dist/client/router';
 import Toolbar from '../../components/toolbar';
 import Image from 'next/image'
 import fetch from 'node-fetch'
+import { server } from '../../config';
 // import UserService from 'services/UserService';
 
-const Feed = ({article,page_number,totalResults}) => {
+const Feed = ({articles,page_number,totalResults}) => {
     const router=useRouter()
     // console.log(article,page_number);
-    const [articles, setarticles] = useState(article);
+    const [articles1, setarticles1] = useState(articles);
     const [currentPage, setCurrentPage] = useState(2);
     const [hasMore, setHasMore] = useState(true);
    
     const getMoreArticles = async() => {
       var cPage: number = currentPage + 1;
       setCurrentPage(cPage);
-<<<<<<< HEAD
-=======
-     
->>>>>>> b6adefa353e8a3d7d60a82e65c2de64b7d39b0d9
-      
+   
+
       const apiJson = await fetchData(currentPage);
-      console.log("res ..", apiJson);
+      // console.log("res ..", apiJson);
       const { apiResponse } = apiJson;
   
-      const { article } = await apiResponse;
-      setarticles((articles) => [...articles, ...article]);
-
+      const {articles}  = await apiResponse;
+      // console.log('getartciles',article);
+      
+      setarticles1((articles1) => [...articles1, ...articles]);
+      
+      // setarticles((articles1) => [...articles1, ...article]);
+      console.log('getarticles',articles1);
     }
     useEffect(() => {
-      setHasMore(totalResults > articles.length ? true : false);
-    }, [articles]);
+      setHasMore(totalResults > articles1.length ? true : false);
+    }, [articles1]);
     return (
         <div >
           <Toolbar/>
             <>
             <InfiniteScroll 
-                    dataLength={articles.length}                    
+                    dataLength={articles1.length}                    
                     next={getMoreArticles}
                     hasMore={hasMore}
-                    loader={<div className="text-center" key={0}>loading data ...</div>}>
+                    loader={<div className="text-center">loading data ...</div>}
+                    endMessage={
+                      <p style={{ textAlign: "center" }}>
+                        <b>Yay! You have seen it all</b>
+                      </p>
+                    }
+                    >
                       
-            {articles.map((article,index)=>(     //here each articles are maping,that is each articles are comming through a loop
+            {articles1.map((article,index)=>(     //here each articles are maping,that is each articles are comming through a loop
                 <div  key={index} className="divide-y divide-black">
                   <div  className="p-8 mx-auto my-5 divide-y justify-centerw-full md:w-2/5 ">
                     <h1 className="my-2 text-2xl font-semibold">{article.title}</h1>
                     <p className="my-2 divide-y divide-y-reverse divide-black">{article.description}</p>
-                    {!!article.urlToImage && <Image src={article.urlToImage} width={700} height={500}/>}
+                    {!!article.urlToImage && <img src={article.urlToImage} width={700} height={500}/>}
                     {/* here first part checking images exist and then showing */}
                 </div>
                 </div>
@@ -67,41 +75,30 @@ const Feed = ({article,page_number,totalResults}) => {
        
     )
 }
-const fetchData=async (page_number)=>{
- const apiResponse= await fetch(
-     `https://newsapi.org/v2/top-headlines?country=us&pageSize=5&page=${page_number}`,
-   
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_NEWS_KEY}`,
-      },
-    },
-  ).then(res => res.json());
-  return apiResponse
-  // console.log('res', apiResponse);
+const fetchData=async (number)=>{
   
+ const apiResponse= await fetch(`${server}/api/${number}`,).then(res => res.json());
+//  console.log('res', apiResponse);
+          
+  return apiResponse
   
 }
 
-export const getServerSideProps=async ()=>{
+export const getServerSideProps=async (pageContext)=>{
    
-    const page_number = 1;
-
-
-    const apiJson = await fetchData(page_number);
-  
-    const apiResponse=await apiJson
-    
-    // console.log(apiResponse);
-    const  {articles}  = apiResponse;
-    // const {totalResults}  = apiResponse;
-    const { totalResults } = apiResponse;
-
+  const page_number =1;
+ 
+  const apiJson = await fetchData(page_number);
+  // console.log('res ..', apiJson);
+  const {apiResponse} = apiJson;
+  const { articles } = apiResponse;
+  const { totalResults } = apiResponse;
+   
       
 
       return {
         props: {
-          article: articles,
+          articles,
           page_number:page_number,
          totalResults,
         },

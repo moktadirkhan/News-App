@@ -1,4 +1,5 @@
 module.exports = {
+  eslint: { ignoreDuringBuilds: true },
   images: {
     // limit of 25 deviceSizes values
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -46,10 +47,6 @@ module.exports = {
               'static01.nyt.com',
               'images.wsj.net',
               'hips.hearstapps.com',
-              'www.ozarksfirst.com',
-              'thehill.com',
-              'i.guim.co.uk',
-              'www.xda-developers.com',
               'a2.espncdn.com',
               'a4.espncdn.com',
                 'cf-images.us-east-1.prod.boltdns.net',
@@ -60,7 +57,10 @@ module.exports = {
               'scitechdaily.com',
               'www.telegraph.co.uk',
               'i.dailymail.co.uk',
-            'media.npr.org',
-            'pagesix.com'],
+                'media.npr.org',
+                'pagesix.com',
+                'sportshub.cbsistatic.com',
+              'storage.googleapis.com',
+            'thehill.com'],
   },
 }
